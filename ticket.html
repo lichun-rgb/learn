@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <title>代办列表</title>
+  <meta charset="UTF-8">
+  <!-- import CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+  <div id="app">
+    <template >
+            <el-table
+              :data="tableData"
+              border
+              style="width: 30%">
+              <el-table-column
+                fixed
+                prop="id"
+                label="ID"
+                width="150">
+              </el-table-column>
+              <el-table-column
+                prop="name"
+                label="任务名称"
+                width="120">
+              </el-table-column>
+              <el-table-column
+                prop="crtTime"
+                label="创建时间"
+                width="120">
+              </el-table-column>
+              <el-table-column
+                fixed="right"
+                label="操作"
+                width="100">
+                <template slot-scope="scope">
+                  <el-button type="text" size="small" @click="showImg(scope.row.instanceId)">查看流程位置</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </template>
+
+          <el-dialog
+            title="提示"
+            :visible.sync="dialogVisible"
+            width="100%"
+            :before-close="handleClose">
+            <!-- <span v-html='img'></span> -->
+            <img id="pic">
+            <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+   
+  </span>
+</el-dialog>
+  </div>
+</body>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+  <!-- import Vue before Element -->
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- import JavaScript -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+      
+  </script>
+  <script>
+    var app=new Vue({
+      el: '#app',
+      data() {
+      return {
+        tableData: [],
+        dialogVisible: false,
+        img: ''
+      }
+    },
+    created() {
+    // 获取列表数据
+    this.getList()
+  },
+  methods: {
+    getList() {
+    var self=this;
+    $.ajax({
+    url: "http://127.0.0.1:8081/ticketlist",
+    contentType: 'application/json',
+    type: "Get",
+    dataType: "json",
+    success: function(data) {
+        self.tableData=data.data
+         },
+      });
+    },
+
+//  修改流程图s
+    handleClick(val) {
+      
+      window.location.href='index.html?haha='+val;
+      sessionStorage.setItem('key', val);
+
+    },
+
+//  显示流程图片
+showImg(val) {
+     this.dialogVisible = true
+     var self=this
+     console.log(val)
+      var xmlhttp;
+      xmlhttp=new XMLHttpRequest();
+      xmlhttp.open("GET","http://127.0.0.1:8081/getProcessInstanceDiagramArr/"+val,true);
+      xmlhttp.responseType = "blob";
+      xmlhttp.onload = function(){
+      // console.log(this);
+      if (this.status == 200) {
+          var blob = this.response;
+          var img = document.createElement("img");
+          img.onload = function(e) {
+              window.URL.revokeObjectURL(img.src); 
+          };
+          // img.src = window.URL.createObjectURL(blob);
+          // document.body.appendChild(img);
+//        以下为赋值弹窗实验
+          $('#pic')[0].src = window.URL.createObjectURL(blob);
+          // self.img=img;
+          console.log(img)
+      }
+    }
+    xmlhttp.send();
+    },
+
+    handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      }
+  }
+    })
+  </script>
+</html>
