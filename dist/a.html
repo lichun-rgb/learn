@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html xmlns="http:/www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <#assign title = "审批"/>
+    <#include "/common/common_css.html"/>
+    <style>
+        .widget {
+            margin: 0px;
+        }
+    </style>
+</head>
+<body>
+<#include "appConfig.html"/>
+<#include "/common/common_header.html"/>
+<div class="main-container container-fluid">
+    <div class="page-container">
+        <div class="page-sidebar" id="sidebar">
+            <div id="nav" data-open='inspection' data-active='ticket-list'>
+                <#include "/common/common_sidebar.html"/>
+            </div>
+        </div>
+        <div class="page-content">
+
+            <div class="page-header position-relative">
+                <div class="header-title">
+                    <h1>审批</h1>
+                </div>
+                <div class="header-buttons">
+                    <a class="sidebar-toggler" href="javascript:void(0);">
+                        <i class="fa fa-arrows-h"></i>
+                    </a>
+                    <a class="fullscreen" id="fullscreen-toggler" href="javascript:void(0);">
+                        <i class="glyphicon glyphicon-fullscreen"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="page-body" id="gridd">
+                <div class="row">
+                    <div class="widget">
+                        <div class="widget-header bordered-bottom bordered-main">
+                            <span class="widget-caption">问题信息</span>
+                        </div>
+                        <!--Widget Header-->
+                        <div class="widget-body" id="widget-body1">
+                            <div class="row">
+                                <div class="col-lg-12 col-sm-12 col-xs-12">
+                                    <div class="well no-margin-bottom padding-20 ">
+                                        <form class="form-horizontal" id="searchFrom">
+                                            <div class="row">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-1 control-label no-padding-right text-align-center">
+                                                                单据编号
+                                                            </label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" class="form-control "
+                                                                       value="${ticket.ticketNo!}" disabled/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-1 control-label no-padding-right text-align-center">
+                                                                上报时间
+                                                            </label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" class="form-control "
+                                                                       value="${formatDateTime(ticket.reportTime,"yyyy-MM-dd HH:mm:ss")} " disabled/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-1 control-label no-padding-right text-align-center">
+                                                                标题
+                                                            </label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" class="form-control " disabled
+                                                                       value="${ticket.title!}"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-1 control-label no-padding-right text-align-center">
+                                                                问题描述：
+                                                            </label>
+                                                            <div class="col-sm-6">
+                                                            <textarea class="form-control" rows="5" disabled
+                                                                      cols="20">${ticket.description!}</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-1 control-label no-padding-right text-align-center">
+                                                                位置：
+                                                            </label>
+                                                            <div class="col-sm-6">
+                                                                <input type="text" class="form-control " disabled
+                                                                       value="${ticket.location!}"/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-1 control-label no-padding-right text-align-center">
+                                                                处理意见：
+                                                            </label>
+                                                            <div class="col-sm-6">
+                                                            <textarea class="form-control" rows="5" disabled
+                                                                      cols="20">${ticket.result!}</textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-1 control-label no-padding-right text-align-center">
+                                                                现场照片：
+                                                            </label>
+                                                            <div class="col-sm-6" id="ima"
+                                                                 style="border:0px solid rgba(0, 0, 0, .3)">
+                                                                <#if ticket.attachments ??>
+                                                                <#list ticket.attachments as att>
+                                                                <#if att.phase='confirm'>
+                                                                <img src="${imageUrlPrefix}${att.path}" class="min" width="180"
+                                                                     height="150">
+                                                            </#if>
+                                                        </#list>
+
+                                                    </#if>
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label class="col-sm-1 control-label no-padding-right text-align-center">
+                                                建议措施：
+                                            </label>
+                                            <div class="col-sm-2">
+                                                <select id="treatmentSelect" disabled="true" >
+                                                    <option value="FALSE_POSITIVE" >误报无需处理</option>
+                                                    <option value="TICKET_PUNISH_TYPE_XCZLZG">现场责令整改通知书</option>
+                                                    <option value="TICKET_PUNISH_TYPE_YHBBMLHZFJC">与环保部门联合执法检查联系单</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="punishment" id="punishment0" hidden="hidden">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label class="col-sm-1 control-label no-padding-right text-align-center">
+
+                                            </label>
+                                            <div class="col-sm-6" style="background: #f7f7f7; padding: 10px 0;border: 1px solid #eee;" id="TICKET_PUNISH_TYPE_XCZLZG" style="display: none;">
+                                                <div class="borderbox" style="    padding-left: 24px;">
+                                                    <div class="row" >
+                                                        <div class="form-group">
+                                                            <label class="col-sm-1 control-label no-padding-right">
+                                                                排水户
+                                                                <span  style="color: brown">*</span>
+                                                            </label>
+                                                            <div class="col-sm-4">
+                                                                <input class="form-control" type="text" id="TICKET_PUNISH_TYPE_XCZLZG_discharger" disabled="true"
+                                                                       />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-1 control-label no-padding-right" >
+                                                                影响河道
+                                                                <span  style="color: brown">*</span>
+                                                            </label>
+                                                            <div class="col-sm-4">
+                                                                <input class="form-control" type="text" id="TICKET_PUNISH_TYPE_XCZLZG_river" disabled="true"
+                                                                       />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-10 ">
+                                                                <input type="radio"  value="1"  name="TICKET_PUNISH_TYPE_XCZLZG" disabled="true" />
+                                                                <span class="text">晴天有少量水由雨水排放口排入市政管网</span>
+                                                            </label>
+                                                            <div class="col-sm-2"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-10">
+                                                                <input type="radio"  value="2"   name="TICKET_PUNISH_TYPE_XCZLZG" disabled="true"/>
+                                                                <span class="text">晴天有少量水排入附近河道</span>
+                                                            </label>
+                                                            <div class="col-sm-2"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-10 ">
+                                                                <input type="radio"  value="3"   name="TICKET_PUNISH_TYPE_XCZLZG"disabled="true"/>
+                                                                <span class="text">晴天由雨水排放口排出量大于批准的允许清下水排放量</span>
+                                                            </label>
+                                                            <div class="col-sm-2"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--//                                  与政府部门联合执法-->
+                                <div class="punishment" id="punishment3"  hidden="hidden">
+                                    <div class="">
+                                        <div class="form-group">
+                                            <label class="col-sm-1 control-label no-padding-right text-align-center">
+
+                                            </label>
+                                            <div class="col-sm-11" >
+                                                <div class="col-sm-7" style=" border: 1px solid #eee; background: #f7f7f7;padding: 15px 30px;" id="TICKET_PUNISH_TYPE_YHBBMLHZFJC" style="display: none;">
+
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-1 control-label no-padding-right">
+                                                                地&nbsp;&nbsp;&nbsp;&nbsp;址
+                                                                <span style="color: brown">*</span>
+                                                            </label>
+                                                            <div class="col-sm-4">
+                                                                <input class="form-control" type="text"  id="TICKET_PUNISH_TYPE_YHBBMLHZFJC_addr" disabled="true"
+                                                                       />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-1 control-label no-padding-right">
+                                                                排水户
+                                                                <span style="color: brown">*</span>
+                                                            </label>
+                                                            <div class="col-sm-4">
+                                                                <input class="form-control" type="text" id="TICKET_PUNISH_TYPE_YHBBMLHZFJC_discharger" disabled="true"
+                                                                       />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-1 control-label no-padding-right">
+                                                                &nbsp;
+                                                            </label>
+                                                            <label class="col-sm-9 ">
+                                                                <input type="checkbox" value="1"
+                                                                       name="TICKET_PUNISH_TYPE_YHBBMLHZFJC" disabled="true"/>
+                                                                <span class="text">晴天有大量水排入市政雨水系统</span>
+                                                            </label>
+                                                            <div class="col-sm-2"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-1 control-label no-padding-right">
+                                                                &nbsp;
+                                                            </label>
+                                                            <label class="col-sm-9">
+                                                                <input type="checkbox" value="2"
+                                                                       name="TICKET_PUNISH_TYPE_YHBBMLHZFJC" disabled="true"/>
+                                                                <span class="text">晴天有大量水排放入附近河道的问题</span>
+                                                            </label>
+                                                            <div class="col-sm-2"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-1 control-label no-padding-right">
+                                                                &nbsp;
+                                                            </label>
+                                                            <label class="col-sm-9">
+                                                                <input type="checkbox" value="3"
+                                                                       name="TICKET_PUNISH_TYPE_YHBBMLHZFJC" disabled="true" />
+                                                                <span class="text">晴天雨水排放口出水水质视觉异常</span>
+                                                            </label>
+                                                            <div class="col-sm-2"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <label class="col-sm-1 control-label no-padding-right text-align-center">
+                                                    审批意见：
+                                                </label>
+                                                <div class="col-sm-6">
+                                                            <textarea class="form-control" rows="5" id="comments"
+                                                                      cols="20" value=""></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class=" col-xs-12">
+                                        <div class="text-align-center">
+                                            <button id="save" type="button" class="btn btn-primary" onclick="returnTask()"
+                                                    aria-hidden="true">
+                                                退回修改
+                                            </button>
+                                            <button id="save" type="button" class="btn btn-primary" onclick="assignSubmit()"
+                                                    aria-hidden="true">
+                                                审批通过
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Widget Body-->
+            </div>
+            <div class="widget">
+                <div class="widget-header bordered-bottom bordered-main">
+                    <span class="widget-caption">操作记录</span>
+                </div>
+                <!--Widget Header-->
+                <div class="widget-body" id="widget-body1">
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12 col-xs-12">
+                            <div class="well grid no-margin-bottom padding-20 ">
+                                <table id="jqGrid"></table>
+                                <div id="jqGridPager"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Widget Body-->
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<#include "/common/common_js.html"/>
+<script>
+    $(document).ready(function () {
+        $(".select2").select2();
+        $(".multiselect").select2();
+        loadOperationRecord();
+        loadTask();
+        maxImage();
+
+    });
+    function maxImage(){
+        $("img").on("click",function(){
+            window.open($(this).attr("src"),'_blank');
+        });
+    }
+    //加载待办详情详情
+    function loadTask() {
+        jQuery.ajax({
+            cache: false,
+            type: "GET",
+            dateType : "json",
+            contentType:"application/json",
+            url: "/ticket/ticket/${ticket.id?c!}/${taskId?c}",
+            success: function (data) {
+                if(data == null || data.length == 0) {
+                    $.warning("获取详情失败，请稍后重试");
+                } else {
+                    console.log("detail:" + JSON.stringify(data));
+                    var item = data.ticket;
+
+                    // 加载建议措施区域
+                    $("#treatmentSelect option").each(function(){
+                        if ($(this).val() == item.punishType) {
+                            if(item.punishType == "TICKET_PUNISH_TYPE_YHBBMLHZFJC" ){
+                                $("#punishment3").attr("hidden",false)
+                            }
+                            if(item.punishType == "TICKET_PUNISH_TYPE_XCZLZG" ){
+                                $("#punishment0").attr("hidden",false)
+                            }
+                            $(this).attr('selected','selected');
+                            $("#"+item.punishType).css('display', 'block');
+                            var punishmentOjb = JSON.parse(item.punishmentJson);
+                            console.log(item.punishType);
+                            if (typeof punishmentOjb != "undefined" && punishmentOjb != null) {
+                                $("input[name="+item.punishType+"]").each(function() {
+                                    var inputObj = this;
+                                    var option = $(inputObj).val();
+                                    var checkString = punishmentOjb.options;
+                                    if (typeof checkString != "undefined" && checkString != null) {
+                                        checkString.split(",").forEach(function(element) {
+                                            if (element == option) {
+                                                $(inputObj).prop("checked", "checked");
+                                            }
+                                        });
+                                    }
+                                })
+                                $("#"+item.punishType+"_discharger").val(punishmentOjb.discharger);
+                                $("#"+item.punishType+"_river").val(punishmentOjb.river);
+                                $("#"+item.punishType+"_addr").val(punishmentOjb.addr);
+                                $("#"+item.punishType+"_outfallId").val(punishmentOjb.outfallId);
+                            }
+                        }
+                    });
+                }
+            },
+            error:function(data){
+                var statusCode = data.status;
+                console.log(statusCode);
+                $.warning(data.responseJSON.message);
+            }
+        });
+    }
+
+    function loadOperationRecord(){
+        $("#jqGrid").jqGrid({
+            url: "/ticket/operationRecordList?ticketId="+${ticket.id?c!},
+            mtype: "GET",
+            datatype: "json",
+
+            colModel: [
+                {
+                    label: '时间',
+                    name: 'operateTime',
+                    width: 80
+                },
+                {
+                    label: '操作人',
+                    name: 'operator',
+                    width: 80
+                },
+                {
+                    label: '操作',
+                    name: 'action',
+                    width: 120,
+                    formatter: "select",
+                    editoptions: {
+                        value: "ASSIGN:分配;CREATE:创建;CONFIRM:核查;CLOSE:关闭;REJECT:驳回;APPROVE:审批;REPORT:反馈;INSPECT:核查;PROCESS:处理;OPEN:井盖被打开"
+                    },
+                },
+                {
+                    label: '备注内容、处理意见',
+                    name: 'content',
+                    width: 190
+                }
+            ],
+            viewrecords: true,
+            responsive: true,
+            height: 'auto',
+            width: $(".grid").width(),
+            rownumbers: true,
+            toolbar: [true, "top"],
+            rowNum: 20,
+            pager: "#jqGridPager"
+        });
+    }
+    function operationChange() {
+        var type = $("#operateSelect").find("option:selected").val();
+        if (type == "cancel") {
+            $("#streetsDiv").prop("hidden", true);
+        } else {
+            $("#streetsDiv").prop("hidden", false);
+        }
+    }
+
+    $("#jqGrid").jqGrid({
+        url: "/ticket/operationRecordList?ticketId="+${ticket.id?c!},
+        mtype: "GET",
+        datatype: "json",
+
+        colModel: [
+            {
+                label: '时间',
+                name: 'operateTime',
+                width: 120,
+                fixed: false
+            },
+            {
+                label: '操作人',
+                name: 'operator',
+                width: 80
+            },
+            {
+                label: '操作',
+                name: 'action',
+                width: 120,
+                formatter: "select",
+                editoptions: {
+                    value: "ASSIGN:分配;CREATE:创建;CONFIRM:核查;CLOSE:关闭;REJECT:驳回;APPROVE:审批;REPORT:反馈;INSPECT:核查;PROCESS:处理;NOTICE:预警通知;SOLVE:确认处理意见;REASSIGN:向各街道交办单;OPEN:井盖被打开"
+                },
+            },
+            {
+                label: '备注内容、处理意见',
+                name: 'content',
+                width: 150
+            }
+        ],
+        viewrecords: true,
+        responsive: true,
+        height: 'auto',
+        width: $(".grid").width(),
+        rownumbers: true,
+        toolbar: [true, "top"],
+        rowNum: 20,
+        pager: "#jqGridPager"
+    });
+
+    function assignSubmit(){
+        var comments=$("#comments").val().trim();
+        var result={
+            variables:"",
+            action:"APPROVE",
+            comments:null
+        };
+        var jsonArr=[];
+        var jsonObj={};
+        var action = $("#operateSelect").find("option:selected").val();
+
+        if(typeof(action) == "undefined"){
+            action="approve";
+        }
+        jsonObj.action=action;
+        jsonArr.push(jsonObj);
+        result.variables= JSON.stringify(jsonArr)
+        result.comments = comments;
+        jQuery.ajax({
+            cache: false,
+            type: "POST",
+            dateType : "json",
+            contentType:"application/json",
+            url: "/ticket/approveTicket/${ticket.id?c!}/${taskId?c}",
+            data: JSON.stringify(result),
+            success: function (data) {
+                var statusCode = data.status;
+                console.log(statusCode);
+                location.href="/inspection/todoList"
+            },
+            error:function(data){
+                var statusCode = data.status;
+                console.log(statusCode);
+                $.warning(data.responseJSON.message);
+            }
+        });
+    }
+
+    function returnTask(){
+        var comments=$("#comments").val().trim();
+        var result={
+            variables:"",
+            action:"REJECT",
+            comments:null
+        };
+        var jsonArr=[];
+        var jsonObj={};
+        var action = $("#operateSelect").find("option:selected").val();
+        if(typeof(action) == "undefined"){
+            action="reject";
+        }
+        jsonObj.action=action;
+        jsonArr.push(jsonObj);
+        result.variables= JSON.stringify(jsonArr)
+        result.comments = comments;
+        jQuery.ajax({
+            cache: false,
+            type: "POST",
+            dateType : "json",
+            contentType:"application/json",
+            url: "/ticket/approveTicket/${ticket.id?c!}/${taskId?c}",
+            data: JSON.stringify(result),
+            success: function (data) {
+                var statusCode = data.status;
+                console.log(statusCode);
+                location.href="/inspection/todoList"
+            },
+            error:function(data){
+                var statusCode = data.status;
+                console.log(statusCode);
+                $.warning(data.responseJSON.message);
+            }
+        });
+    }
+</script>
+<script
+        src="${urls.getForLookupPath('/global/js/common/jquery.util.min.js')}?v=${.now?string[" hhmmSSsss"]}"></script>
+</body>
+
+</html>

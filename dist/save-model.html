@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>保存模型</title>
+    <link rel="stylesheet" href="css/diagram-js.css" />
+    <link rel="stylesheet" href="vendor/bpmn-font/css/bpmn-embedded.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <style>
+    .wrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: auto;
+    margin: 0;
+    };
+    .dialog{
+    position: relative;
+    margin: 0 auto 50px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    box-shadow: 0 1px 3px rgba(0,0,0,.3);
+    /* -webkit-box-sizing: border-box; */
+    width:400px;
+    }
+    </style>
+</head>
+<body>
+    <div class="wrapper" >
+
+            <form action="#" class="dialog">
+                    <table border="0px" cellpadding="0px" cellspacing="0px" width="500px" height="500px" align="center">
+                        <tr>
+                            <td colspan="3">
+                                <font color="#add8e6">保存模型</font>&nbsp;&nbsp;
+                            </td>
+                        <tr>
+                            <td><div>
+                                            <label class="col-sm-4 control-label no-padding-right text-align-center">
+                                                    名称:
+                                                </label>
+                                        <input type="text"  name="name"></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                    <div>
+                                            <label class="col-sm-4 control-label no-padding-right text-align-center">
+                                                    Key:
+                                                </label><input type="text" name="processKey"></div>
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                    <div>
+                                            <label class="col-sm-4 control-label no-padding-right text-align-center">
+                                                    描述:
+                                                </label><textarea  rows="5"></textarea></div>
+                            </td>
+                            
+                        </tr>
+
+                        <tr>
+                                <td>
+                                        <button>取消</button>                  
+                                </td>
+                                <td>
+                                        <button>确定</button>
+                                </td>
+                                
+                            </tr>
+                    </table>
+                </form>
+            
+                
+                
+                
+                 
+    </div>
+
+</body>
+</html>
